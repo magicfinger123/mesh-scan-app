@@ -48,10 +48,15 @@ class QuadNode: SCNNode {
             adjustPointsToSquare(vertex: vertex)
         }
         for endpoint in endpoints {
+            print("end point position: ", endpoint.position)
             endpoint.setPosition(endpoint.position)
+
         }
     }
 
+    func createPosition(point: CGPoint) -> SCNVector3 {
+        return SCNVector3(x: Float(point.x), y: Float(point.y), z: 1)
+    }
     func resetMeasurement() {
         for endpoint in endpoints {
             endpoint.removeFromParentNode()
@@ -122,8 +127,8 @@ class QuadNode: SCNNode {
             let line = drawSKLine(from: endpoint1.point, to: endpoint2.point)
             let midpoint = midpoint(between: (endpoint1.point, endpoint2.point))
             let pill = drawSKRectangle(at: midpoint)
-            let distance = calculateDistanceInInches(from: endpoint1.position, to: endpoint2.position)
-
+          //  let distance = calculateDistanceInInches(from: endpoint1.position, to: endpoint2.position)
+            let distance = calculateDistance(from: endpoint1.point, p2: endpoint2.point)
             let distanceString = String(format: "%.2f", distance)
             let text = drawSKText(text: distanceString, at: midpoint)
 
@@ -160,8 +165,8 @@ class QuadNode: SCNNode {
 
     private func drawSKRectangle(at point: CGPoint) -> SKNode {
         let rect = SKShapeNode(rectOf: CGSize(width: 50, height: 25), cornerRadius: 13)
-        rect.fillColor = .blue
-        rect.strokeColor = .blue
+        rect.fillColor = .white
+        rect.strokeColor = .white
         rect.position = skPoint(point)
         return rect
     }
@@ -170,7 +175,7 @@ class QuadNode: SCNNode {
         let textNode = SKLabelNode()
         textNode.text = text
         textNode.fontSize = 12
-        textNode.fontColor = UIColor.white
+        textNode.fontColor = UIColor.black
         textNode.verticalAlignmentMode = .center
         textNode.position = skPoint(point)
         return textNode

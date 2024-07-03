@@ -18,6 +18,18 @@ func calculateDistanceInInches(from position1: SCNVector3, to position2: SCNVect
     return distance * 100 * 0.3937
 }
 
+func calculateDistance(from p1: CGPoint, p2: CGPoint)  -> Float{
+    let xDist = (p2.x - p1.x); //[2]
+    let yDist = (p2.y - p1.y); //[3]
+    let distance = sqrt((xDist * xDist) + (yDist * yDist));
+    let ppi: CGFloat = 476  // PPI for iPhone 13 mini
+    let distanceInInches = pointsToInches(points: distance, ppi: ppi)
+    return Float(distanceInInches)
+}
+func pointsToInches(points: CGFloat, ppi: CGFloat) -> CGFloat {
+    return points / ppi
+}
+
 typealias Float2 = SIMD2<Float>
 typealias Float3 = SIMD3<Float>
 
