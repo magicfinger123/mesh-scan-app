@@ -20,6 +20,12 @@ extension DrawRulersViewController {
         let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handlePan(recognizer:)))
         view.addGestureRecognizer(panGestureRecognizer)
     }
+    override func viewWillDisappear(_ animated: Bool) {
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
+    }
+    override func viewWillAppear(_ animated: Bool) {
+        self.navigationController?.setNavigationBarHidden(false, animated: true)
+    }
     @objc
     func handlePan(recognizer: UIPanGestureRecognizer) {
         let touchLocation = recognizer.location(in: view)

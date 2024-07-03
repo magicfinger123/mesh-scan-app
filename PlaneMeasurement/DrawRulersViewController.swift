@@ -38,6 +38,7 @@ class DrawRulersViewController: UIViewController {
     let magnifyingGlass = MagnifyingGlassView(offset: CGPoint(x: 0, y: -75.0), radius: 50.0, scale: 1, crosshairColor: .white, crosshairWidth: 0.8)
 
 
+    
     init(viewSnapshot: UIImage, pov: SCNNode, frame: ARFrame, root: SCNNode) {
         self.image = viewSnapshot
         self.pointOfView = pov
@@ -55,31 +56,43 @@ class DrawRulersViewController: UIViewController {
         super.viewDidLoad()
 
         enablePanGesture()
-
         imageView = UIImageView(image: image)
         imageView.frame = view.frame
         view.addSubview(imageView)
-
+        setupNavigationItem()
         setupSceneView()
         setupQuadNode()
         setupSKScene()
-    //    setupTableView()
+
     }
     // MARK: - Setup
     func setupScene() {
         scene = SCNScene()
-
         let cameraNode = SCNNode()
         cameraNode.camera = SCNCamera()
         cameraNode.simdTransform = frame.camera.transform
         scene.rootNode.addChildNode(cameraNode)
-
         for child in oldRootNode.childNodes {
             scene.rootNode.addChildNode(child)
             child.geometry?.firstMaterial?.colorBufferWriteMask = []
         }
     }
 
+    private func setupNavigationItem() {
+        navigationItem.title = "Create measurement"
+        let backButton = UIBarButtonItem(title: "Back", style: .plain, target: self, action: #selector(backButtonTapped))
+        backButton.tintColor = .white.withAlphaComponent(0.5) // Customize the back button color
+        navigationItem.leftBarButtonItem = backButton
+        if let navigationBar = navigationController?.navigationBar {
+            navigationBar.backgroundColor = .black
+            navigationBar.barTintColor = .systemBlue // Background color
+            navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white] // Title color
+        }
+    }
+    @objc private func backButtonTapped() {
+        // Handle back button tap
+        navigationController?.popViewController(animated: true)
+    }
     func setupSceneView() {
         sceneView = SCNView()
         sceneView.frame = view.frame
@@ -88,8 +101,18 @@ class DrawRulersViewController: UIViewController {
         sceneView.pointOfView = pointOfView
         sceneView.autoenablesDefaultLighting = false
         view.addSubview(sceneView)
-    }
-
+      
+        // Add the UILabel to the view hierarchy
+        view.addSubview(descriptionLabel)
+        // Set up constraints for the UILabel
+         NSLayoutConstraint.activate([
+             descriptionLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+             descriptionLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+             descriptionLabel.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+             descriptionLabel.heightAnchor.constraint(equalToConstant: 100)
+         ])
+      }
+      
     func setupQuadNode() {
         self.quadNode = QuadNode(sceneView: sceneView)
         scene.rootNode.addChildNode(quadNode)
@@ -121,4 +144,16 @@ class DrawRulersViewController: UIViewController {
             tableViewController.view.heightAnchor.constraint(equalToConstant: 300)
         ])
     }
+    private let descriptionLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.textAlignment = .center
+        label.font = UIFont.systemFont(ofSize: 16)
+        label.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+        label.textColor = .white
+        label.numberOfLines = 3
+        label.text = "Click any where on the screen to reveal a measurement interface with a blue rectangle and magnifying glass"
+        return label
+    }()
+    
 }

@@ -164,7 +164,7 @@ class QuadNode: SCNNode {
 
 
     private func drawSKRectangle(at point: CGPoint) -> SKNode {
-        let rect = SKShapeNode(rectOf: CGSize(width: 50, height: 25), cornerRadius: 13)
+        let rect = SKShapeNode(rectOf: CGSize(width: 80, height: 25), cornerRadius: 13)
         rect.fillColor = .white
         rect.strokeColor = .white
         rect.position = skPoint(point)
@@ -173,8 +173,8 @@ class QuadNode: SCNNode {
 
     private func drawSKText(text: String, at point: CGPoint) -> SKNode {
         let textNode = SKLabelNode()
-        textNode.text = text
-        textNode.fontSize = 12
+        textNode.text = text + " inch"
+        textNode.fontSize = 14
         textNode.fontColor = UIColor.black
         textNode.verticalAlignmentMode = .center
         textNode.position = skPoint(point)
